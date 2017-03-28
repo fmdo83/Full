@@ -1,5 +1,5 @@
 var helper = require('sendgrid').mail;
-var sg = require('sendgrid')('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');
+var sg = require('sendgrid')('');
 
 function sendMail(to_email, url)
 {
@@ -21,4 +21,11 @@ function sendMail(to_email, url)
   })
 };
 
+function validateEmail(email)
+{
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+};
+
 module.exports.sendMail = sendMail;
+module.exports.validateEmail = validateEmail;
