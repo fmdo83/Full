@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script>
+    function enviar()
+    {
+      var user = $('#user').val();
+      var pass = $('#password').val();
+      $.ajax({
+        type: "POST",
+        url: "http://localhost:3000/api/invitaciones",
+        data: {
+          nombreDoc: $('#nombreDoc').val(),
+          mailDoc: $('#mailDoc').val(),
+          nombrePaciente: $('#nombrePaciente').val(),
+          mailPaciente: $('#mailPaciente').val(),
+          room: $('#room').val()
+        },
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("authorization",
+          "Basic " + btoa(user + ":" + pass))
+        }
+      }).then(function(data) {
+         if(data.value == true){
+           alert(data.message);
+         }
+         else {
+           alert(data.message);
+         }
+      });
+    }
+  </script>
+</head>
+  <body>
+    <label for="u">Usuario:  </label></br><input type="text" id="user"></br>
+    <label for="p">Password: </label></br><input type="text" id="password"></br>
+    <hr>
+    <label for="nd">Nombre Doc: </label></br><input type="text" id="nombreDoc"></br>
+    <label for="md">Mail Doc: </label></br><input type="text" id="mailDoc"></br>
+    <label for="np">Nombre Paciente: </label></br><input type="text" id="nombrePaciente"></br>
+    <label for="mp">Mail Paciente: </label></br><input type="text" id="mailPaciente"></br>
+    <label for="md">Room: </label></br><input type="text" id="room"></br>
+    <hr>
+    <button type="button" onclick="enviar()">ENVIAR</button></br></br>
+  </body>
+</html>
