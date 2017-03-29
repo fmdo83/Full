@@ -1,4 +1,5 @@
 var express = require('express');
+const path = require('path');
 var app = express();
 var jsToken = require('./scripts/token');
 var bodyParser = require('body-parser');
@@ -7,9 +8,12 @@ var jsMail = require('./scripts/mail');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//Solo para poder mostrar index.html
+app.use(express.static(path.join(__dirname,'public')));
 
+//La pagina cliente realiza un POST contra /api/invitaciones.
 app.post('/api/invitaciones', function(req, res) {
-    var header=req.headers['authorization'];
+    var header=req.headers['authorization']; //Del header extraigo el usuario y contraseña.
     var token=header.split(/\s+/).pop();
     auth=new Buffer(token, 'base64').toString();
     parts=auth.split(/:/);
@@ -65,18 +69,33 @@ console.log('running on port 3000');
 
 function validateForm(nombreDoc, mailDoc, nombrePaciente, mailPaciente, room)
 {
-   var valid = new Object();
-   valid.value = false;
-   valid.message = "";
-   if(nombreDoc == "")
-      valid.message += "Nombre doctor no valido\n";
-   if(!jsMail.validateEmail(mailDoc))
-      valid.message += "Mail doctor no valido\n";
-   if(nombrePaciente == "")
-      valid.message += "Nombre paciente no valido\n";
-   if(!jsMail.validateEmail(mailPaciente))
-      valid.message += "Mail paciente no valido\n";
-   if(room == "")
-      valid.message += "Room no valido\n";
-   return valid;
+  var valid = new Object();
+  valid.value = true;
+  valid.message = "";
+  if(nombreDoc == "")
+  {
+    valid.message += "Nombre doctor no valido\n";
+    valid.value = false;
+  }
+  if(!jsMail.validateEmail(mailDoc))
+  {
+    valid.message += "Mail doctor no valido\n";
+    valid.value = false;
+  }
+  if(nombrePaciente == "")
+  {
+    valid.message += "Nombre paciente no valido\n";
+    valid.value = false;
+  }
+  if(!jsMail.validateEmail(mailPaciente))
+  {
+    valid.message += "Mail paciente no valido\n";
+    valid.value = false;
+  }
+  if(room == "")
+  {
+    valid.message += "Room no valido\n";
+    valid.value = false;
+  }
+  return valid;
 }
